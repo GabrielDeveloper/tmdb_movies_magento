@@ -1,0 +1,50 @@
+<?php $movie = $this->renderMovie(); ?>
+
+<style>
+.product_price {
+    width: calc( (50%) * .25 - 30px )!important;
+}
+</style>
+
+<div class="dashboard-main col-m-8 col-m-push-4" >
+    <div class="dashboard-item dashboard-item-primary">
+        <div class="dashboard-item-title">Title</div>
+        <div class="dashboard-item-content">
+            <strong class="dashboard-sales-value">
+                <?= $movie->title ?>
+            </strong>
+        </div>
+    </div>
+    <div class="dashboard-item dashboard-item-primary">
+        <div class="dashboard-item-title">Description</div>
+        <div class="dashboard-item-content">
+            <div class="empty-text">
+                <?= $movie->overview ?>
+            </div>
+        </div>
+    </div>
+    <form method="get">
+        <fieldset class="admin__fieldset">
+            <div class="admin__field admin__field-small _required">
+                <label class="admin__field-label product_price">
+                    <span >Price</span>
+                </label>
+                <div class="admin__field-control">
+                    <div class="admin__control-addon">
+                        <input class="admin__control-text" type="text" name="Product[price]" maxlength="255">
+                        <label class="admin__addon-prefix">
+                            <span>$</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <input name="Product[title]" type="hidden" value="<?= $movie->title ?>">
+            <input name="Product[movie_id]" type="hidden" value="<?= $movie->id ?>">
+            <input name="Product[description]" type="hidden" value="<?= $movie->overview ?>">
+            <button type="submit" class="action-primary">Add as Product</button>
+        </fieldset>
+    </form>
+</div>
+<div class="dashboard-secondary col-m-4 col-m-pull-8">
+    <img src="<?= $this->handleImageURI($movie->poster_path)?>" />
+</div>

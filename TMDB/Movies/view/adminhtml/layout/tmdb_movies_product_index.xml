@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <head>
+        <title> Add Product </title>
+    </head>
+
+    <body>
+    <referenceBlock name="content">
+        <block template="product.phtml" class="TMDB\Movies\Block\Adminhtml\Product"
+               name="tmdb_movies_block_product"/>
+    </referenceBlock>
+    </body>
+</page>

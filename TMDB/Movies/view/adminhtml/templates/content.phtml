@@ -1,0 +1,131 @@
+<?php
+    $movies = $this->renderMovies();
+    $lastPage = $movies->page - 1;
+    $currentPage = $movies->page;
+    $nextPage = $movies->page + 1;
+    $totalPage = $movies->total_pages;
+    $movies = $movies->results;
+?>
+<style>
+    .pagination {
+        display: block;
+        border: 1px solid #eeeeee;
+        height: 30px;
+    }
+    .left {
+        display: inline-block;
+        float: left !important;
+    }
+    .right {
+        display: inline-block;
+        float: right !important;
+    }
+    .middle {
+        display: inline-block;
+        width: calc(100% - 290px);
+        text-align: center;
+        font-size: 1.4em;
+    }
+    .pagination .btn:hover {
+        text-decoration: none;
+        background: #00539d;
+    }
+    .pagination .btn {
+        border-radius: 6px;
+        background: #006bb4;
+        color: white !important;
+        padding: 5px 20px;
+        width: 105px;
+        text-align: center;
+    }
+    .item.product.product-item {
+        display: inline-block;
+        margin: 15px 10px;
+    }
+
+    .item.product.product-item .product-item-info:hover{
+        background: #fff;
+        box-shadow: 3px 3px 4px 0 rgba(0,0,0,0.3);
+        border: 1px solid #bbb;
+        margin: -10px;
+        padding: 9px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .product.actions.product-item-actions {
+        text-align: center;
+        font-weight: bold;
+
+    }
+    .product.actions.product-item-actions a{
+        color: #FFF;
+        text-decoration: none;
+    }
+    .add-product {
+        background-color: #ff0000b3;
+        padding: 10px;
+    }
+
+    .product-added {
+        background-color: #106f0ab0;
+        padding: 10px;
+    }
+</style>
+
+
+<div class="page-main-actions">
+    Search
+</div>
+<div class="columns">
+    <div class="colums main">
+        <div class="products wrapper grid products-grid">
+                    <ol class="products list items product-items">
+                        <?php foreach ($movies as $movie):
+                            $poster_path = $movie->poster_path == "" ? "http://lorempixel.com/150/225/1/No%20Poster%20Avaliable/" : "https://image.tmdb.org/t/p/w300".$movie->poster_path;
+                            ?>
+
+                        <li class="item product product-item">
+                            <div class="product-item-info" data-container="product-grid">
+                                    <span class="product-image-container" style="width:240px;">
+                                        <span class="product-image-wrapper" style="padding-bottom: 125%;">
+                                            <img class="product-image-photo" src="<?= $poster_path ?>" width="240" height="300" alt="Cassius Sparring Tank">
+                                        </span>
+                                    </span>
+                                <div class="product details product-item-details">
+                                    <strong class="product name product-item-name">
+                                           <h3> <?= $movie->title ?> </h3>
+                                    </strong>
+                                    <div class="product actions product-item-actions">
+                                    <?php if (!$this->productAdded($movie->id)):?>
+                                        <div class="actions-primary add-product">
+                                                <a href="<?= $this->getUrlBuilder($movie->id)?>" title="Add to Products" class="action tocart primary">
+                                                        <span>Add to Products</span>
+                                                </a>
+                                        </div>
+                                    <?php else :?>
+                                        <div class="actions-primary product-added">
+                                                <a href="<?= $this->getUrlBuilder($movie->id)?>" title="Add to Products" class="action tocart primary">
+                                                        <span>Product Added</span>
+                                                </a>
+                                        </div>
+                                    <?php endif;?>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <?php endforeach; ?>
+                    </ol>
+        </div>
+    </div>
+</div>
+
+<div class="pagination">
+    <?php if ($lastPage >= 1): ?>
+        <a class="btn left" href="?page=<?= $lastPage ?>">Previews Page</a>
+    <?php endif; ?>
+    <span class="middle"><?= $currentPage . " / " . $totalPage ?> </span>
+    <?php if ($nextPage <= $totalPage): ?>
+        <a class="btn right" href="?page=<?= $nextPage ?>">Next Page</a>
+    <?php endif; ?>
+</div>
