@@ -2,20 +2,22 @@
 
 namespace TMDB\Movies\Block\Adminhtml;
 
+use \Magento\Backend\Block\Template;
+use \Magento\Backend\Block\Template\Context;
+use \Magento\Framework\UrlInterface;
+use \Magento\Framework\App\ObjectManager;
+use \Zend\Http\Request;
+use \Zend\Http\Client;
+
 use TMDB\Movies\Service\TmdbService;
 
-class Main extends \Magento\Backend\Block\Template {
+class Main extends Template
+{
 
-    public function __construct(\Magento\Backend\Block\Template\Context $context,
-                                \Magento\Framework\UrlInterface $urlBuilder,
-                                \Magento\Catalog\Api\ProductRepositoryInterface $productRepository){
-
-        $this->productRepository = $productRepository;
+    public function __construct(Context $context, UrlInterface $urlBuilder)
+    {
         $this->urlBuilder = $urlBuilder;
         parent::__construct($context);
-    }
-
-    function _prepareLayout() {
     }
 
     public function getUrlBuilder($path, $params = [])
@@ -25,17 +27,21 @@ class Main extends \Magento\Backend\Block\Template {
 
     public function renderMovies()
     {
-        $service = new TmdbService(
-            new \Zend\Http\Request,
-            new \Zend\Http\Client
-        );
+        $service = new TmdbService(new Request, new Client);
         $service->setEndpoint("discover/movie");
+        $service->addParams([
+            "sort_by"       =>  "popularity.desc",
+            "include_adult" =>  "false",
+            "include_video" =>  "false",
+            "page"          =>  $this->getPage(),
+        ]);
+
 
         if ($this->getGenre()) {
             $service->setGenre($this->getGenre());
         }
 
-        return $service->getMovies($this->getPage());
+        return $service->getResponse();
     }
 
     public function sanitizeTitle($title)
@@ -48,18 +54,15 @@ class Main extends \Magento\Backend\Block\Template {
 
     public function getGenresList()
     {
-        $service = new TmdbService(
-            new \Zend\Http\Request,
-            new \Zend\Http\Client
-        );
+        $service = new TmdbService(new Request, new Client);
         $service->setEndpoint("genre/movie/list");
-        return $service->getGenres();
+        return $service->getResponse();
 
     }
 
     public function productAdded($movieId)
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $objectManager = ObjectManager::getInstance();
         $product = $objectManager->get('Magento\Catalog\Model\Product');
         $sku = 'tmdb-'.$movieId;
         return $product->getIdBySku($sku);

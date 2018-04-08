@@ -1,19 +1,22 @@
 <?php
 namespace TMDB\Movies\Controller\Adminhtml\Index;
 
-class Index extends \Magento\Backend\App\Action {
+use \Magento\Backend\App\Action;
+use \Magento\Backend\App\Action\Context;
+use \Magento\Framework\View\Result\PageFactory;
+
+class Index extends Action
+{
     protected $resultPageFactory;
 
-    public function __construct(\Magento\Backend\App\Action\Context $context,
-                                \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-                                \Magento\Catalog\Api\ProductRepositoryInterface $productRepository)
+    public function __construct(Context $context, PageFactory $resultPageFactory)
     {
         $this->resultPageFactory = $resultPageFactory;
-        $this->productRepository = $productRepository;
         return parent::__construct($context);
     }
 
-    public function execute() {
+    public function execute()
+    {
         $page = $this->resultPageFactory->create();
 
         $page->getLayout()->getBlock('tmdb_movies_block_main')->setPage($this->getRequest()->getParam('page'));
@@ -24,7 +27,8 @@ class Index extends \Magento\Backend\App\Action {
         return $page;
     }
 
-    protected function _isAllowed() {
+    protected function _isAllowed()
+    {
         return $this->_authorization->isAllowed('TMDB_Movies::movies');
     }
 }
