@@ -7,21 +7,21 @@ use \Magento\Backend\Block\Template;
 use \Zend\Http\Request;
 use \Zend\Http\Client;
 
-use TMDB\Movies\Service\TmdbService;
+use TMDB\Movies\Api\TmdbServiceInterface;
 
 class Product extends Template
 {
 
-    public function __construct(Context $context)
+    public function __construct(Context $context, TmdbServiceInterface $tmdbService)
     {
+        $this->tmdbService = $tmdbService;
         parent::__construct($context);
     }
 
     public function renderMovie()
     {
-        $service = new TmdbService(new Request, new Client);
-        $service->setEndpoint("movie/". $this->getMovie());
-        return $service->getResponse();
+        $this->tmdbService->setEndpoint("movie/". $this->getMovie());
+        return $this->tmdbService->getResponse();
     }
 
     public function handleImageURI($img)

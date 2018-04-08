@@ -9,14 +9,15 @@ use \Magento\Framework\App\ObjectManager;
 use \Zend\Http\Request;
 use \Zend\Http\Client;
 
-use TMDB\Movies\Service\TmdbService;
+use TMDB\Movies\Api\TmdbServiceInterface;
 
 class Main extends Template
 {
 
-    public function __construct(Context $context, UrlInterface $urlBuilder)
+    public function __construct(Context $context, UrlInterface $urlBuilder, TmdbServiceInterface $tmdbService)
     {
         $this->urlBuilder = $urlBuilder;
+        $this->tmdbService = $tmdbService;
         parent::__construct($context);
     }
 
@@ -27,9 +28,8 @@ class Main extends Template
 
     public function renderMovies()
     {
-        $service = new TmdbService(new Request, new Client);
-        $service->setEndpoint("discover/movie");
-        $service->addParams([
+        $this->tmdbService->setEndpoint("discover/movie");
+        $this->tmdbService->addParams([
             "sort_by"       =>  "popularity.desc",
             "include_adult" =>  "false",
             "include_video" =>  "false",
@@ -38,10 +38,10 @@ class Main extends Template
 
 
         if ($this->getGenre()) {
-            $service->setGenre($this->getGenre());
+            $this->tmdbService->setGenre($this->getGenre());
         }
 
-        return $service->getResponse();
+        return $this->tmdbService->getResponse();
     }
 
     public function sanitizeTitle($title)

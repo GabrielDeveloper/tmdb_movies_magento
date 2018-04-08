@@ -2,7 +2,11 @@
 
 namespace TMDB\Movies\Service;
 
-class TmdbService
+use TMDB\Movies\Api\TmdbServiceInterface;
+use \Zend\Http\Request;
+use \Zend\Http\Client;
+
+class TmdbService implements TmdbServiceInterface
 {
 
     const API_BASE_URL = "https://api.themoviedb.org/3/";
@@ -11,7 +15,7 @@ class TmdbService
     protected $endpoint = "";
     protected $parameters = [ "api_key" => self::API_KEY ];
 
-    public function __construct(\Zend\Http\Request $request, \Zend\Http\Client $client)
+    public function __construct(Request $request, Client $client)
     {
         $this->request = $request;
         $this->client = $client;
