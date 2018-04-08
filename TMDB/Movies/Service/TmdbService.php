@@ -9,6 +9,7 @@ class TmdbService
     const API_KEY = "32928d7a6bb4f1f737ee519bb1433d37";
 
     protected $endpoint = "";
+    protected $parameters = ["api_key" => self::API_KEY];
 
     public function __construct(\Zend\Http\Request $request, \Zend\Http\Client $client)
     {
@@ -37,6 +38,17 @@ class TmdbService
         $this->request->setHeaders($httpHeaders);
     }
 
+    public function getParameters()
+    {
+        return new \Zend\Stdlib\Parameters($this->parameters);
+    }
+
+    public function addParams($params = [])
+    {
+        $this->parameters = array_merge($this->parameters, $params);
+        return $this;
+    }
+    
     public function getMovies($page = 1)
     {
         $this->setHeaders();
@@ -44,15 +56,14 @@ class TmdbService
         $this->request->setUri($this->getURI());
         $this->request->setMethod(\Zend\Http\Request::METHOD_GET);
 
-        $params = new \Zend\Stdlib\Parameters([
-            "api_key"       => self::API_KEY,
+        $this->addParams([
             "sort_by"       =>  "popularity.desc",
             "include_adult" =>  "false",
             "include_video" =>  "false",
             "page"          =>  $page,
         ]);
 
-        $this->request->setQuery($params);
+        $this->request->setQuery($this->getParameters());
 
         $options = [
             'adapter'   => 'Zend\Http\Client\Adapter\Curl',
@@ -74,11 +85,7 @@ class TmdbService
         $this->request->setUri($this->getURI());
         $this->request->setMethod(\Zend\Http\Request::METHOD_GET);
 
-        $params = new \Zend\Stdlib\Parameters([
-            "api_key"       => self::API_KEY,
-        ]);
-
-        $this->request->setQuery($params);
+        $this->request->setQuery($this->getParameters());
 
         $options = [
             'adapter'   => 'Zend\Http\Client\Adapter\Curl',
@@ -92,4 +99,11 @@ class TmdbService
         $response = $this->client->send($this->request);
         return json_decode($response->getBody());
     }
+
+    public function setGenre($genre_id)
+    {
+        $this->addParams(['with_genres' => $genre_id]);
+        return $this;
+    }
+
 }

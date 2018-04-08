@@ -5,6 +5,8 @@
     $nextPage = $movies->page + 1;
     $totalPage = $movies->total_pages;
     $movies = $movies->results;
+
+    $genres = $this->getGenresList()->genres;
 ?>
 <style>
     .item.product.product-item {
@@ -41,6 +43,21 @@
     .product-added a{
         background-color: #106f0ab0;
     }
+    select.select {
+    background-color: #fff;
+    border: 1px solid #adadad;
+    border-radius: 1px;
+    box-shadow: none;
+    color: #303030;
+    font-size: 1.4rem;
+    font-weight: 400;
+    height: auto;
+    line-height: 1.36;
+    padding: .6rem 1rem .6rem;
+    transition: border-color .1s linear;
+    vertical-align: baseline;
+    width: auto;
+    }
 </style>
 
 
@@ -48,18 +65,28 @@
 
     <div class="admin__data-grid-header-row row row-gutter">
         <div class="col-xs-4">
-            teste
+            <form method="get" action="<?= $this->getUrlBuilder("tmdb_movies/index/index");?>">
+            <select class="select" name="filter_genre">
+                <option value=""> Select genre </option>
+                <?php foreach($genres as $genre) :?>
+                <option value="<?=$genre->id;?>"> <?=$genre->name;?></option>
+                <?php endforeach; ?>
+            </select>
+            <button type="submit">Filter genre</button>
+            </form>
         </div>
         <div class="col-xs-5">
             teste
         </div>
         <div class="col-xs-3">
             <div class="admin__data-grid-pager">
-                <a href="<?= $this->getUrlBuilder("tmdb_movies/index/index", ['page' => $lastPage])?>" 
-                   class="action-previous action-default" type="button" title="Previous Page" ></a>
+                <a href="<?= $this->handlePaginationLink($lastPage)?>" 
+                   class="action-previous action-default" type="button" title="Previous Page" 
+                    <?= $currentPage == 1 ? 'disabled' : '';?>></a>
                 <label class="admin__control-support-text" ><?=$currentPage;?> of <?=$totalPage;?></label>
-                <a href="<?= $this->getUrlBuilder("tmdb_movies/index/index", ['page' => $nextPage])?>" 
-                   class="action-next action-default" type="button" title="Next Page" ></a>
+                <a href="<?= $this->handlePaginationLink($nextPage)?>" 
+                   class="action-next action-default" type="button" title="Next Page"
+                   <?= $currentPage == $totalPage ? 'disabled' : '';?>></a>
             </div>
         </div>
     </div>

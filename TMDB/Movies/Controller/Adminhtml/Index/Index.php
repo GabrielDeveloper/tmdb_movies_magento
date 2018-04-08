@@ -16,10 +16,8 @@ class Index extends \Magento\Backend\App\Action {
     public function execute() {
         $page = $this->resultPageFactory->create();
 
-        $pageParam = $this->getRequest()->getParam('page');
-        if ($pageParam) {
-            $page->getLayout()->getBlock('tmdb_movies_block_main')->setPage($pageParam);
-        }
+        $page->getLayout()->getBlock('tmdb_movies_block_main')->setPage($this->getRequest()->getParam('page'));
+        $page->getLayout()->getBlock('tmdb_movies_block_main')->setGenre($this->getRequest()->getParam('filter_genre'));
 
         $page->setActiveMenu('TMDB_Movies::movies');
         $page->getLayout()->initMessages();
