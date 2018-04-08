@@ -7,37 +7,6 @@
     $movies = $movies->results;
 ?>
 <style>
-    .pagination {
-        display: block;
-        border: 1px solid #eeeeee;
-        height: 30px;
-    }
-    .left {
-        display: inline-block;
-        float: left !important;
-    }
-    .right {
-        display: inline-block;
-        float: right !important;
-    }
-    .middle {
-        display: inline-block;
-        width: calc(100% - 290px);
-        text-align: center;
-        font-size: 1.4em;
-    }
-    .pagination .btn:hover {
-        text-decoration: none;
-        background: #00539d;
-    }
-    .pagination .btn {
-        border-radius: 6px;
-        background: #006bb4;
-        color: white !important;
-        padding: 5px 20px;
-        width: 105px;
-        text-align: center;
-    }
     .item.product.product-item {
         display: inline-block;
         margin: 15px 10px;
@@ -56,76 +25,86 @@
     .product.actions.product-item-actions {
         text-align: center;
         font-weight: bold;
+        padding-bottom: 10px;
 
     }
+
     .product.actions.product-item-actions a{
         color: #FFF;
         text-decoration: none;
+        padding: 10px 68px;
     }
-    .add-product {
+    .add-product a{
         background-color: #ff0000b3;
-        padding: 10px;
     }
 
-    .product-added {
+    .product-added a{
         background-color: #106f0ab0;
-        padding: 10px;
     }
 </style>
 
 
-<div class="page-main-actions">
-    Search
+<div class="page-main-actions container">
+
+    <div class="admin__data-grid-header-row row row-gutter">
+        <div class="col-xs-4">
+            teste
+        </div>
+        <div class="col-xs-5">
+            teste
+        </div>
+        <div class="col-xs-3">
+            <div class="admin__data-grid-pager">
+                <a href="<?= $this->getUrlBuilder("tmdb_movies/index/index", ['page' => $lastPage])?>" 
+                   class="action-previous action-default" type="button" title="Previous Page" ></a>
+                <label class="admin__control-support-text" ><?=$currentPage;?> of <?=$totalPage;?></label>
+                <a href="<?= $this->getUrlBuilder("tmdb_movies/index/index", ['page' => $nextPage])?>" 
+                   class="action-next action-default" type="button" title="Next Page" ></a>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="columns">
     <div class="colums main">
         <div class="products wrapper grid products-grid">
-                    <ol class="products list items product-items">
-                        <?php foreach ($movies as $movie):
-                            $poster_path = $movie->poster_path == "" ? "http://lorempixel.com/150/225/1/No%20Poster%20Avaliable/" : "https://image.tmdb.org/t/p/w300".$movie->poster_path;
-                            ?>
-
-                        <li class="item product product-item">
-                            <div class="product-item-info" data-container="product-grid">
-                                    <span class="product-image-container" style="width:240px;">
-                                        <span class="product-image-wrapper" style="padding-bottom: 125%;">
-                                            <img class="product-image-photo" src="<?= $poster_path ?>" width="240" height="300" alt="Cassius Sparring Tank">
-                                        </span>
-                                    </span>
-                                <div class="product details product-item-details">
-                                    <strong class="product name product-item-name">
-                                           <h3> <?= $movie->title ?> </h3>
-                                    </strong>
-                                    <div class="product actions product-item-actions">
-                                    <?php if (!$this->productAdded($movie->id)):?>
-                                        <div class="actions-primary add-product">
-                                                <a href="<?= $this->getUrlBuilder($movie->id)?>" title="Add to Products" class="action tocart primary">
-                                                        <span>Add to Products</span>
-                                                </a>
-                                        </div>
-                                    <?php else :?>
-                                        <div class="actions-primary product-added">
-                                                <a href="<?= $this->getUrlBuilder($movie->id)?>" title="Add to Products" class="action tocart primary">
-                                                        <span>Product Added</span>
-                                                </a>
-                                        </div>
-                                    <?php endif;?>
+            <ol class="products list items product-items">
+                <?php foreach ($movies as $movie): ?>
+                <li class="item product product-item">
+                    <div class="product-item-info" data-container="product-grid">
+                        <span class="product-image-container" style="width:240px;">
+                            <span class="product-image-wrapper" style="padding-bottom: 125%;">
+                                <img class="product-image-photo" 
+                                     src="<?= $this->handleImageURI($movie->poster_path) ?>" 
+                                     width="240" height="300" alt="<?= $movie->title ?>">
+                            </span>
+                        </span>
+                        <div class="product details product-item-details">
+                            <strong class="product name product-item-name">
+                                   <h3 title="<?= $movie->title ?>"> <?= $this->sanitizeTitle($movie->title); ?> </h3>
+                            </strong>
+                            <div class="product actions product-item-actions">
+                                <?php if (!$this->productAdded($movie->id)):?>
+                                    <div class="actions-primary add-product">
+                                            <a href="<?= $this->getUrlBuilder("tmdb_movies/product/index", ['movie_id' => $movie->id])?>" 
+                                                    title="Add to Products" class="action tocart primary">
+                                                    <span>Add to Products</span>
+                                            </a>
                                     </div>
-                                </div>
+                                <?php else :?>
+                                    <div class="actions-primary product-added">
+                                            <a href="<?= $this->getUrlBuilder("catalog/product/edit", ['id' => $this->productAdded($movie->id)])?>" 
+                                                title="Add to Products" class="action tocart primary">
+                                                    <span>Product Added</span>
+                                            </a>
+                                    </div>
+                                <?php endif;?>
                             </div>
-                        </li>
-                        <?php endforeach; ?>
-                    </ol>
+                        </div>
+                    </div>
+                </li>
+                <?php endforeach; ?>
+            </ol>
         </div>
     </div>
 </div>
 
-<div class="pagination">
-    <?php if ($lastPage >= 1): ?>
-        <a class="btn left" href="?page=<?= $lastPage ?>">Previews Page</a>
-    <?php endif; ?>
-    <span class="middle"><?= $currentPage . " / " . $totalPage ?> </span>
-    <?php if ($nextPage <= $totalPage): ?>
-        <a class="btn right" href="?page=<?= $nextPage ?>">Next Page</a>
-    <?php endif; ?>
-</div>
