@@ -64,7 +64,7 @@
             <select class="select" name="filter_genre">
                 <option value=""> Select Genre </option>
                 <?php foreach($genres as $genre) :?>
-                <option value="<?=$genre->id;?>"> <?=$genre->name;?></option>
+                <option value="<?=$genre->id;?>" <?= ($this->getGenre() == $genre->id) ? "selected" : "";?>> <?=$genre->name;?></option>
                 <?php endforeach; ?>
             </select>
             <button type="submit">Filter genre</button>
