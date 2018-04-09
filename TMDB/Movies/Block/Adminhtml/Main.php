@@ -10,14 +10,22 @@ use \Zend\Http\Request;
 use \Zend\Http\Client;
 
 use TMDB\Movies\Api\TmdbServiceInterface;
+use TMDB\Movies\Api\TmdbMoviesRepositoryInterface;
+use TMDB\Movies\Service\TmdbService;
 
 class Main extends Template
 {
 
-    public function __construct(Context $context, UrlInterface $urlBuilder, TmdbServiceInterface $tmdbService)
+    public function __construct(
+        Context $context,
+        UrlInterface $urlBuilder,
+        TmdbServiceInterface $tmdbService,
+        TmdbMoviesRepositoryInterface $tmdbMoviesRepository
+    )
     {
         $this->urlBuilder = $urlBuilder;
         $this->tmdbService = $tmdbService;
+        $this->tmdbMoviesRepository = $tmdbMoviesRepository;
         parent::__construct($context);
     }
 
@@ -80,18 +88,13 @@ class Main extends Template
 
     public function productAdded($movieId)
     {
-        $objectManager = ObjectManager::getInstance();
-        $product = $objectManager->get('Magento\Catalog\Model\Product');
-        $sku = 'tmdb-'.$movieId;
-        return $product->getIdBySku($sku);
+        $sku = TmdbService::SKU_PREFIX . $movieId;
+        return $this->tmdbMoviesRepository->getIdBySku($sku);
     }
 
     public function handleImageURI($img)
     {
-        if (empty($img)) {
-            return "http://lorempixel.com/150/225/1/No%20Poster%20Avaliable/";
-        }
-        return "https://image.tmdb.org/t/p/w300" . $img;
+        return $this->tmdbService->getImage($img);
     }
 
     public function handlePaginationLink($page)

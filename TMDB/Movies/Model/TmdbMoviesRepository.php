@@ -12,8 +12,6 @@ use TMDB\Movies\Service\TmdbService;
 class TmdbMoviesRepository implements TmdbMoviesRepositoryInterface
 {
 
-    const SKU_PREFIX = "tmdb-";
-
     public $errors = [];
     public $product;
     public $directoryList;
@@ -28,13 +26,13 @@ class TmdbMoviesRepository implements TmdbMoviesRepositoryInterface
 
     public function createProduct($movie)
     {
-        if (empty($movie)) {
-            $this->addErrors("Movie not found");
+        $sku = TmdbService::SKU_PREFIX . $movie['movie_id'];
+        $imageUrl = TmdbService::IMAGE_BASE_URL . $movie['image_url'];
+
+        if (empty($movie['price'])) {
+            $this->addErrors("Price not setted");
             return false;
         }
-
-        $sku = self::SKU_PREFIX . $movie['movie_id'];
-        $imageUrl = TmdbService::IMAGE_BASE_URL . $movie['image_url']; 
 
         $this->product->setSku($sku);
         $this->product->setName($movie['title']);
@@ -59,7 +57,7 @@ class TmdbMoviesRepository implements TmdbMoviesRepositoryInterface
             return false;
         }
 
-        if (!empty($imageUrl) && !$this->addImageToProduct($this->product, $imageUrl, true, ['image', 'small_image', 'thumbnail'])) {
+        if (!empty($movie['image_url']) && !$this->addImageToProduct($this->product, $imageUrl, true, ['image', 'small_image', 'thumbnail'])) {
             $this->addErrors("Image not added to movie");
             return false;
         }
@@ -91,5 +89,10 @@ class TmdbMoviesRepository implements TmdbMoviesRepositoryInterface
     public function addErrors($error)
     {
         $this->errors[] = $error;
+    }
+
+    public function getIdBySku($sku)
+    {
+        return $this->product->getIdBySku($sku);
     }
 }

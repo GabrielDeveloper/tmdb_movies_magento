@@ -12,6 +12,7 @@ class TmdbService implements TmdbServiceInterface
     const API_BASE_URL = "https://api.themoviedb.org/3/";
     const API_KEY = "32928d7a6bb4f1f737ee519bb1433d37";
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w300";
+    const SKU_PREFIX = "tmdb-";
 
     protected $endpoint = "";
     protected $parameters = [ "api_key" => self::API_KEY ];
@@ -63,7 +64,12 @@ class TmdbService implements TmdbServiceInterface
         $this->parameters = array_merge($this->parameters, $params);
         return $this;
     }
-    
+
+    public function getParams()
+    {
+        return $this->parameters;
+    }
+
     public function getResponse()
     {
         $this->setHeaders();
@@ -84,4 +90,11 @@ class TmdbService implements TmdbServiceInterface
         return $this;
     }
 
+    public function getImage($imagePath = "")
+    {
+        if (empty($imagePath)) {
+            return "http://lorempixel.com/150/225/1/No%20Poster%20Avaliable/";
+        }
+        return TmdbService::IMAGE_BASE_URL . $imagePath;
+    }
 }

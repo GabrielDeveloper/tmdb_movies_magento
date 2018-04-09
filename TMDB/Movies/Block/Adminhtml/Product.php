@@ -27,10 +27,7 @@ class Product extends Template
 
     public function handleImageURI($img)
     {
-        if (empty($img)) {
-            return "http://lorempixel.com/150/225/1/No%20Poster%20Avaliable/";
-        }
-        return TmdbService::IMAGE_BASE_URL . $img;
+        return $this->tmdbService->getImage($img);
     }
 }
 

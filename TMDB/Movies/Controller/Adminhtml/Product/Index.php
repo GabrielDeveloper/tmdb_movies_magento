@@ -24,12 +24,11 @@ class Index extends Action
         return parent::__construct($context);
     }
 
-    public function execute() 
+    public function execute()
     {
-
         $product = $this->getRequest()->getParam('Product');
 
-        if ($this->tmdbMoviesRepository->createProduct($product)) {
+        if ($product && $this->tmdbMoviesRepository->createProduct($product)) {
             $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
             return $resultRedirect->setPath('catalog/product/index');
         }
