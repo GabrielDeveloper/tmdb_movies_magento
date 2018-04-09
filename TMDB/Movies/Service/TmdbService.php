@@ -11,6 +11,7 @@ class TmdbService implements TmdbServiceInterface
 
     const API_BASE_URL = "https://api.themoviedb.org/3/";
     const API_KEY = "32928d7a6bb4f1f737ee519bb1433d37";
+    const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w300";
 
     protected $endpoint = "";
     protected $parameters = [ "api_key" => self::API_KEY ];

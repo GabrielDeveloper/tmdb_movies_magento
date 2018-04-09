@@ -1,10 +1,29 @@
 <?php $movie = $this->renderMovie(); ?>
 
 <style>
-.product_price {
-    width: calc( (50%) * .25 - 30px )!important;
-}
+    .product_price {
+        width: calc( (50%) * .25 - 30px )!important;
+    }
+    .error ul{
+        background-color: #ff0000b3;
+        padding: 10px;
+        color: #FFF;
+        font-weight: bold;
+    }
 </style>
+<div class="columns">
+    <div class="colums main">
+    <?php if (!empty($this->getErrors())) :?>
+        <div class="error">
+            <ul>
+                <?php foreach($this->getErrors() as $error): ?>
+                    <li> <?=$error?> </li>
+                <?php endforeach;?>
+            </ul> 
+        </div>
+    <?php endif; ?>
+    </div>
+</div>
 
 <div class="dashboard-main col-m-8 col-m-push-4" >
     <div class="dashboard-item dashboard-item-primary">
@@ -41,6 +60,7 @@
             <input name="Product[title]" type="hidden" value="<?= $movie->title ?>">
             <input name="Product[movie_id]" type="hidden" value="<?= $movie->id ?>">
             <input name="Product[description]" type="hidden" value="<?= $movie->overview ?>">
+            <input name="Product[image_url]" type="hidden" value="<?= $movie->poster_path ?>">
             <button type="submit" class="action-primary">Add as Product</button>
         </fieldset>
     </form>

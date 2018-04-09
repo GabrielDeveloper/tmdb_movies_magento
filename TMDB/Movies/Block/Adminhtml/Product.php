@@ -8,6 +8,7 @@ use \Zend\Http\Request;
 use \Zend\Http\Client;
 
 use TMDB\Movies\Api\TmdbServiceInterface;
+use TMDB\Movies\Service\TmdbService;
 
 class Product extends Template
 {
@@ -29,7 +30,7 @@ class Product extends Template
         if (empty($img)) {
             return "http://lorempixel.com/150/225/1/No%20Poster%20Avaliable/";
         }
-        return "https://image.tmdb.org/t/p/w300" . $img;
+        return TmdbService::IMAGE_BASE_URL . $img;
     }
 }
 
