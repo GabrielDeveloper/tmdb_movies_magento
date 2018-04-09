@@ -21,6 +21,7 @@ class Index extends Action
 
         $page->getLayout()->getBlock('tmdb_movies_block_main')->setPage($this->getRequest()->getParam('page'));
         $page->getLayout()->getBlock('tmdb_movies_block_main')->setGenre($this->getRequest()->getParam('filter_genre'));
+        $page->getLayout()->getBlock('tmdb_movies_block_main')->setSearch($this->getRequest()->getParam('search_movie'));
 
         $page->setActiveMenu('TMDB_Movies::movies');
         $page->getLayout()->initMessages();

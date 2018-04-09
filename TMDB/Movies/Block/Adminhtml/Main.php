@@ -28,6 +28,14 @@ class Main extends Template
 
     public function renderMovies()
     {
+        if ($this->getSearch()) {
+            return $this->searchByMovie();
+        }
+        return $this->searchDefault();
+    }
+
+    public function searchDefault()
+    {
         $this->tmdbService->setEndpoint("discover/movie");
         $this->tmdbService->addParams([
             "sort_by"       =>  "popularity.desc",
@@ -36,10 +44,21 @@ class Main extends Template
             "page"          =>  $this->getPage(),
         ]);
 
-
         if ($this->getGenre()) {
             $this->tmdbService->setGenre($this->getGenre());
         }
+
+        return $this->tmdbService->getResponse();
+    }
+
+    public function searchByMovie()
+    {
+        $this->tmdbService->setEndpoint("search/movie");
+        $this->tmdbService->addParams([
+            "include_adult" =>  false,
+            "query"         =>  $this->getSearch(),
+            "page"          =>  $this->getPage(),
+        ]);
 
         return $this->tmdbService->getResponse();
     }
@@ -54,9 +73,8 @@ class Main extends Template
 
     public function getGenresList()
     {
-        $service = new TmdbService(new Request, new Client);
-        $service->setEndpoint("genre/movie/list");
-        return $service->getResponse();
+        $this->tmdbService->setEndpoint("genre/movie/list");
+        return $this->tmdbService->getResponse();
 
     }
 
@@ -82,6 +100,11 @@ class Main extends Template
         if ($this->getGenre()) {
             $params['filter_genre'] = $this->getGenre();
         }
+
+        if ($this->getSearch()) {
+            $params['search_movie'] = $this->getSearch();
+        }
+
         return $this->getUrlBuilder("tmdb_movies/index/index", $params);
     }
 
