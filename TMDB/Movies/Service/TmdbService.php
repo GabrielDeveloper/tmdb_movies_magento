@@ -10,7 +10,7 @@ class TmdbService implements TmdbServiceInterface
 {
 
     const API_BASE_URL = "https://api.themoviedb.org/3/";
-    const API_KEY = "32928d7a6bb4f1f737ee519bb1433d37";
+    const API_KEY = "2075326add093f4866ab99feb33d548e";
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w300";
     const SKU_PREFIX = "tmdb-";
 
