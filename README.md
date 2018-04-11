@@ -18,4 +18,16 @@ $ php bin/magento module:status
 
 ```sh
 $ php bin/magento module:enable -c TMDB_Movies
+$ php bin/magento setup:upgrade
+$ php bin/magento setup:di:compile
 ```
+
+## How to use:
+
+ * There is an icon on sidebar menu to TMDB Movies screen
+
+ * Enter to this menu and see the movies ordered by popularity.
+
+ * To add a movie to your store, select the movie and you'll be redirected to the page to add the price of this movie.
+
+ * Choose the price of the movie and click to add as a product

@@ -39,6 +39,7 @@ class TmdbMoviesRepository implements TmdbMoviesRepositoryInterface
         $this->product->setPrice($movie['price']);
         $this->product->setDescription($movie['description']);
 
+        $this->product->setWebsiteIds([1]);
         $this->product->setAttributeSetId(4);
         $this->product->setStatus(1);
         $this->product->setWeight(10);
